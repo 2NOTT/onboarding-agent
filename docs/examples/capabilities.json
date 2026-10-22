@@ -1,0 +1,171 @@
+{
+  "format": "onboarding-capabilities/v1",
+  "mode": "local-rule-demo",
+  "note": "本项目的 Skill / Tool 配置格式，不是 Coze 原生工作流导入格式。",
+  "skills": [
+    {
+      "skill_id": "S001",
+      "type": "question_structuring",
+      "name": "入职问题结构化",
+      "description": "将用户自然语言问题转化为结构化任务信息，识别意图、问题类型、涉及的数据域与信息缺失情况。",
+      "prompt": "你是入职助手的问题结构化技能。将用户问题解析为结构化 JSON（intent/topic/need_* 标志位/missing_fields），员工身份以输入 employee 为准，不得编造。",
+      "model_params": {
+        "model": "",
+        "temperature": 0.1,
+        "max_tokens": 1024
+      },
+      "enabled": true
+    },
+    {
+      "skill_id": "S002",
+      "type": "task_decision",
+      "name": "入职任务决策",
+      "description": "基于员工岗位、部门、入职阶段、已完成任务与任务状态计算结果，判断下一步应优先完成的事项。",
+      "prompt": "你是入职任务决策技能。基于输入的 query_onboarding_tasks 与 calc_task_status 数据输出 recommended_tasks（优先级/建议时间/依赖/负责人/原因），禁止编造任务，输入缺数据时输出空列表并说明。",
+      "model_params": {
+        "model": "",
+        "temperature": 0.3,
+        "max_tokens": 2048
+      },
+      "enabled": true
+    },
+    {
+      "skill_id": "S003",
+      "type": "process_explainer",
+      "name": "入职流程解释",
+      "description": "根据查询结果生成清晰、准确、面向新员工的步骤化流程说明。",
+      "prompt": "你是流程解释技能。输出 process_name 与 steps（每步含 action/owner/materials/expected_time/result_state），只能基于输入数据组织步骤，不得编造制度、联系人、时间。",
+      "model_params": {
+        "model": "",
+        "temperature": 0.4,
+        "max_tokens": 2048
+      },
+      "enabled": true
+    },
+    {
+      "skill_id": "S004",
+      "type": "policy_qa",
+      "name": "制度与知识问答",
+      "description": "基于本地制度知识库查询结果生成带版本标注的制度解释，不编造条款。",
+      "prompt": "你是制度问答技能。仅基于输入的 query_policies 内容回答，必须标注制度名称/版本号/生效日期；未查询到时明确说明并不得虚构；多版本优先最新生效版本。",
+      "model_params": {
+        "model": "",
+        "temperature": 0.2,
+        "max_tokens": 2048
+      },
+      "enabled": true
+    },
+    {
+      "skill_id": "S005",
+      "type": "communication",
+      "name": "入职沟通话术生成",
+      "description": "根据员工问题、任务状态、负责人信息与制度内容，生成自然、专业、友好的最终回复话术。",
+      "prompt": "你是沟通话术技能，输出即员工看到的最终回复。语言清晰友好、任务带编号与优先级、敏感事项避免确定性承诺、不得暴露内部技术信息、必须以查询数据为依据，查不到的信息明确说明。",
+      "model_params": {
+        "model": "",
+        "temperature": 0.6,
+        "max_tokens": 2048
+      },
+      "enabled": true
+    },
+    {
+      "skill_id": "S006",
+      "type": "compliance_check",
+      "name": "合规与风险审核",
+      "description": "审核最终回复是否存在合规、隐私、制度、信息泄露和事实编造风险，不通过时不允许返回原始回复。",
+      "prompt": "你是合规审核技能。审核 draft_reply：是否泄露他人信息与内部技术信息、是否编造制度或承诺敏感事项、制度无结果是否已声明；输出 risk_level/passed/issues/suggestions/final_reply。",
+      "model_params": {
+        "model": "",
+        "temperature": 0.1,
+        "max_tokens": 1024
+      },
+      "enabled": true
+    }
+  ],
+  "tools": [
+    {
+      "tool_id": "TOOL001",
+      "name": "query_employee_info",
+      "display_name": "查询员工信息",
+      "description": "读取本地员工数据：编号、姓名、部门、岗位、入职日期、领导与HR对接人、入职阶段、账号/设备/门禁状态。跨员工查询将被隐私拦截。",
+      "input_params": {
+        "employee_id": "string，可选，默认当前员工"
+      },
+      "data_source": "employees.json",
+      "enabled": true
+    },
+    {
+      "tool_id": "TOOL002",
+      "name": "query_onboarding_tasks",
+      "display_name": "查询入职任务",
+      "description": "按部门、岗位、入职阶段过滤入职任务，返回优先级、依赖、负责人、截止时间与完成状态。",
+      "input_params": {
+        "stage": "string，可选",
+        "keyword": "string，可选"
+      },
+      "data_source": "onboarding_tasks.json",
+      "enabled": true
+    },
+    {
+      "tool_id": "TOOL003",
+      "name": "query_contacts",
+      "display_name": "查询公司联系人",
+      "description": "查询当前员工有权限联系的业务联系人，仅返回姓名、岗位、企业邮箱与企业联系方式。",
+      "input_params": {
+        "role": "string，可选（hr/it/admin/dept_manager/training/finance/security）"
+      },
+      "data_source": "contacts.json",
+      "enabled": true
+    },
+    {
+      "tool_id": "TOOL004",
+      "name": "query_policies",
+      "display_name": "查询制度知识库",
+      "description": "按关键词、类型、版本检索制度，优先返回当前生效版本，返回名称、版本、生效日期、适用范围与正文。",
+      "input_params": {
+        "keyword": "string，可选",
+        "policy_type": "string，可选",
+        "include_deprecated": "boolean，可选，默认false"
+      },
+      "data_source": "policies.json",
+      "enabled": true
+    },
+    {
+      "tool_id": "TOOL005",
+      "name": "query_trainings",
+      "display_name": "查询培训计划",
+      "description": "查询适用当前员工的培训安排：时间、负责人、形式、是否必修与完成状态。",
+      "input_params": {
+        "training_type": "string，可选",
+        "keyword": "string，可选"
+      },
+      "data_source": "trainings.json",
+      "enabled": true
+    },
+    {
+      "tool_id": "TOOL006",
+      "name": "calc_task_status",
+      "display_name": "入职任务状态计算",
+      "description": "纯代码计算：完成率、未完成数、逾期、依赖阻塞、优先级排序与是否可进入下一阶段。",
+      "input_params": {
+        "employee_id": "string，可选，默认当前员工"
+      },
+      "data_source": "employees.json + onboarding_tasks.json（代码计算）",
+      "enabled": true
+    },
+    {
+      "tool_id": "TOOL007",
+      "name": "run_coze_workflow",
+      "display_name": "Coze 工作流调用",
+      "description": "调用外部 Coze 工作流（7694957124648747008）：输入 user_id / CONVERSATION_NAME / USER_INPUT，返回 answer / status / risk_level。单文件离线版不发起外部请求，返回本地参考结果。",
+      "input_params": {
+        "user_input": "string，可选，默认当前问题",
+        "user_id": "string，可选",
+        "conversation_name": "string，可选",
+        "workflow_id": "string，可选"
+      },
+      "data_source": "Coze Workflow API（外部服务）",
+      "enabled": true
+    }
+  ]
+}

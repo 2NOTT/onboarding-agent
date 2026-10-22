@@ -1,0 +1,95 @@
+{
+  "tools": [
+    {
+      "tool_id": "TOOL001",
+      "name": "query_employee_info",
+      "display_name": "查询员工信息",
+      "description": "读取本地 employees.json，查询员工编号、姓名、部门、岗位、入职日期、直属领导、HR对接人、当前入职阶段、已完成/未完成入职任务、企业账号状态、设备领取状态、门禁状态。",
+      "input_params": {
+        "employee_id": "string，可选。默认查询当前员工；出于隐私保护不允许查询其他员工的详细信息"
+      },
+      "data_source": "employees.json",
+      "enabled": true
+    },
+    {
+      "tool_id": "TOOL002",
+      "name": "query_onboarding_tasks",
+      "display_name": "查询入职任务",
+      "description": "读取本地 onboarding_tasks.json，按部门、岗位、入职阶段过滤入职任务，返回任务优先级、依赖关系、负责人、建议完成时间、截止时间与完成状态。",
+      "input_params": {
+        "task_id": "string，可选，按任务编号精确查询",
+        "stage": "string，可选，按阶段过滤（day_1/week_1/month_1/probation）",
+        "keyword": "string，可选，按任务名称或说明关键词过滤",
+        "include_later_stage": "boolean，可选，是否包含尚未进入阶段的任务，默认 false"
+      },
+      "data_source": "onboarding_tasks.json + employees.json",
+      "enabled": true
+    },
+    {
+      "tool_id": "TOOL003",
+      "name": "query_contacts",
+      "display_name": "查询公司联系人",
+      "description": "读取本地 contacts.json，查询当前员工有权限联系的 HR、IT服务台、行政、部门负责人、培训负责人、财务报销负责人、信息安全负责人等业务联系人，仅返回姓名、岗位、企业邮箱与企业联系方式。",
+      "input_params": {
+        "role": "string，可选，按角色过滤（hr/it/admin/dept_manager/training/finance/security）",
+        "keyword": "string，可选，按姓名、职位或说明关键词过滤"
+      },
+      "data_source": "contacts.json + employees.json",
+      "enabled": true
+    },
+    {
+      "tool_id": "TOOL004",
+      "name": "query_policies",
+      "display_name": "查询制度知识库",
+      "description": "读取本地 policies.json，按关键词、制度类型、版本检索员工手册、考勤、请假、报销、信息安全、保密、社保公积金、福利、培训、试用期等制度，优先返回当前生效版本，返回制度名称、版本号、生效日期、适用范围与正文。",
+      "input_params": {
+        "keyword": "string，可选，在制度名称、关键词、正文中检索",
+        "policy_type": "string，可选（handbook/attendance/leave/reimbursement/infosec/confidential/social_insurance/probation/welfare/training/office）",
+        "version": "string，可选，按版本号过滤",
+        "include_deprecated": "boolean，可选，是否包含已废弃版本，默认 false"
+      },
+      "data_source": "policies.json",
+      "enabled": true
+    },
+    {
+      "tool_id": "TOOL005",
+      "name": "query_trainings",
+      "display_name": "查询培训计划",
+      "description": "读取本地 trainings.json，查询适用于当前员工的培训安排：通用培训、岗位培训、信息安全培训、企业文化培训等，返回培训时间、负责人、形式、是否必修与员工完成状态。",
+      "input_params": {
+        "training_type": "string，可选（general/infosec/culture/product/department）",
+        "keyword": "string，可选，按培训名称或说明关键词过滤"
+      },
+      "data_source": "trainings.json + employees.json",
+      "enabled": true
+    },
+    {
+      "tool_id": "TOOL006",
+      "name": "calc_task_status",
+      "display_name": "入职任务状态计算",
+      "description": "纯代码实现（不依赖大模型）：计算员工入职完成率、未完成任务数量、逾期任务、被前置依赖阻塞的任务、当前应优先完成的任务及优先级排序，并判断是否满足进入下一入职阶段的条件。",
+      "input_params": {
+        "employee_id": "string，可选。默认计算当前员工"
+      },
+      "data_source": "employees.json + onboarding_tasks.json（代码计算）",
+      "enabled": true
+    },
+    {
+      "tool_id": "TOOL007",
+      "name": "run_coze_workflow",
+      "display_name": "Coze 工作流调用",
+      "description": "调用外部 Coze 工作流（workflow_id=7694957124648747008）：输入 user_id / CONVERSATION_NAME / USER_INPUT，返回 answer / status / risk_level。工作流含问答节点时首次运行返回追问内容（status=interrupt）与续跑凭据，可用 resume_data + execute_id + event_id 续跑。未配置 COZE_API_TOKEN 时以本地 Mock 输出。",
+      "input_params": {
+        "user_input": "string，可选（默认取用户当前问题）。透传给工作流的 USER_INPUT",
+        "user_id": "string，可选（默认当前员工编号）。透传给工作流的 user_id",
+        "conversation_name": "string，可选（默认 onboarding-{user_id}）。透传给工作流的 CONVERSATION_NAME",
+        "workflow_id": "string，可选。默认取 .env 的 COZE_WORKFLOW_ID（7694957124648747008）",
+        "resume_data": "object/string，可选。问答节点续跑时的补充内容，如 {\"QUESTION_DATA\": \"入职城市：北京...\"}，需与 execute_id / event_id 一起传入",
+        "execute_id": "string，可选。续跑凭据：interrupt 返回的 execute_id",
+        "event_id": "string，可选。续跑凭据：interrupt 返回的 event_id"
+      },
+      "data_source": "Coze Workflow API（外部服务）",
+      "enabled": true
+    }
+  ]
+}

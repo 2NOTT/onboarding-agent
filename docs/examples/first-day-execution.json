@@ -1,0 +1,1405 @@
+{
+  "format": "onboarding-execution/v1",
+  "log_id": "LOG-20261022112211-194b5a",
+  "created_at": "2026-10-22 11:22:11",
+  "employee_id": "E001",
+  "employee": {
+    "employee_id": "E001",
+    "name": "林晓",
+    "department": "产品部",
+    "position": "AI产品经理",
+    "hire_date": "2026-10-05",
+    "onboarding_stage": "day_1",
+    "manager": "马晓东",
+    "hr_contact": "李秀娟",
+    "email": "linxiao@company.com",
+    "phone": "138****1001",
+    "account_status": "已开通",
+    "device_status": "已领取",
+    "access_status": "已开通",
+    "stage_label": "入职第1天"
+  },
+  "question": "我入职第一天需要做什么？",
+  "mock_mode": true,
+  "available_skills": [
+    {
+      "skill_id": "S001",
+      "type": "question_structuring",
+      "name": "入职问题结构化",
+      "description": "将用户自然语言问题转化为结构化任务信息，识别意图、问题类型、涉及的数据域与信息缺失情况。"
+    },
+    {
+      "skill_id": "S002",
+      "type": "task_decision",
+      "name": "入职任务决策",
+      "description": "基于员工岗位、部门、入职阶段、已完成任务与任务状态计算结果，判断下一步应优先完成的事项。"
+    },
+    {
+      "skill_id": "S003",
+      "type": "process_explainer",
+      "name": "入职流程解释",
+      "description": "根据查询结果生成清晰、准确、面向新员工的步骤化流程说明。"
+    },
+    {
+      "skill_id": "S004",
+      "type": "policy_qa",
+      "name": "制度与知识问答",
+      "description": "基于本地制度知识库查询结果生成带版本标注的制度解释，不编造条款。"
+    },
+    {
+      "skill_id": "S005",
+      "type": "communication",
+      "name": "入职沟通话术生成",
+      "description": "根据员工问题、任务状态、负责人信息与制度内容，生成自然、专业、友好的最终回复话术。"
+    },
+    {
+      "skill_id": "S006",
+      "type": "compliance_check",
+      "name": "合规与风险审核",
+      "description": "审核最终回复是否存在合规、隐私、制度、信息泄露和事实编造风险，不通过时不允许返回原始回复。"
+    }
+  ],
+  "available_tools": [
+    {
+      "name": "query_employee_info",
+      "display_name": "查询员工信息",
+      "description": "读取本地员工数据：编号、姓名、部门、岗位、入职日期、领导与HR对接人、入职阶段、账号/设备/门禁状态。跨员工查询将被隐私拦截。"
+    },
+    {
+      "name": "query_onboarding_tasks",
+      "display_name": "查询入职任务",
+      "description": "按部门、岗位、入职阶段过滤入职任务，返回优先级、依赖、负责人、截止时间与完成状态。"
+    },
+    {
+      "name": "query_contacts",
+      "display_name": "查询公司联系人",
+      "description": "查询当前员工有权限联系的业务联系人，仅返回姓名、岗位、企业邮箱与企业联系方式。"
+    },
+    {
+      "name": "query_policies",
+      "display_name": "查询制度知识库",
+      "description": "按关键词、类型、版本检索制度，优先返回当前生效版本，返回名称、版本、生效日期、适用范围与正文。"
+    },
+    {
+      "name": "query_trainings",
+      "display_name": "查询培训计划",
+      "description": "查询适用当前员工的培训安排：时间、负责人、形式、是否必修与完成状态。"
+    },
+    {
+      "name": "calc_task_status",
+      "display_name": "入职任务状态计算",
+      "description": "纯代码计算：完成率、未完成数、逾期、依赖阻塞、优先级排序与是否可进入下一阶段。"
+    },
+    {
+      "name": "run_coze_workflow",
+      "display_name": "Coze 工作流调用",
+      "description": "调用外部 Coze 工作流（7694957124648747008）：输入 user_id / CONVERSATION_NAME / USER_INPUT，返回 answer / status / risk_level。单文件离线版不发起外部请求，返回本地参考结果。"
+    }
+  ],
+  "plan": {
+    "plan_summary": "针对「我入职第一天需要做什么？」的结构化问答计划：先结构化问题，再查询相关数据，最后生成回复并完成合规审核。",
+    "steps": [
+      {
+        "step_id": "S1",
+        "name": "问题结构化",
+        "type": "skill",
+        "target": "question_structuring",
+        "purpose": "将用户问题解析为结构化意图，指导后续查询。",
+        "input": {},
+        "depends_on": []
+      },
+      {
+        "step_id": "S2",
+        "name": "查询员工信息",
+        "type": "tool",
+        "target": "query_employee_info",
+        "purpose": "获取员工身份、部门、岗位、入职阶段与账号设备状态。",
+        "input": {},
+        "depends_on": [
+          "S1"
+        ]
+      },
+      {
+        "step_id": "S3",
+        "name": "查询入职任务",
+        "type": "tool",
+        "target": "query_onboarding_tasks",
+        "purpose": "获取适用于该员工的入职任务清单与完成状态。",
+        "input": {},
+        "depends_on": [
+          "S2"
+        ]
+      },
+      {
+        "step_id": "S4",
+        "name": "计算任务状态",
+        "type": "tool",
+        "target": "calc_task_status",
+        "purpose": "以代码计算完成率、逾期与阻塞情况，得出优先级排序。",
+        "input": {},
+        "depends_on": [
+          "S3"
+        ]
+      },
+      {
+        "step_id": "S5",
+        "name": "入职任务决策",
+        "type": "skill",
+        "target": "task_decision",
+        "purpose": "基于任务数据判断当前应优先完成的事项。",
+        "input": {},
+        "depends_on": [
+          "S2",
+          "S3",
+          "S4"
+        ]
+      },
+      {
+        "step_id": "S6",
+        "name": "生成沟通话术",
+        "type": "skill",
+        "target": "communication",
+        "purpose": "汇总所有查询与技能结果，生成面向员工的最终回复。",
+        "input": {},
+        "depends_on": [
+          "S1",
+          "S2",
+          "S3",
+          "S4",
+          "S5"
+        ]
+      },
+      {
+        "step_id": "S7",
+        "name": "合规与风险审核",
+        "type": "skill",
+        "target": "compliance_check",
+        "purpose": "审核最终回复的合规与风险，通过后才允许返回。",
+        "input": {},
+        "depends_on": [
+          "S6"
+        ]
+      }
+    ]
+  },
+  "planner_engine": "rule",
+  "steps": [
+    {
+      "step_id": "S1",
+      "name": "问题结构化",
+      "type": "skill",
+      "target": "question_structuring",
+      "purpose": "将用户问题解析为结构化意图，指导后续查询。",
+      "depends_on": [],
+      "input": {
+        "question": "我入职第一天需要做什么？",
+        "employee": {
+          "employee_id": "E001",
+          "name": "林晓",
+          "department": "产品部",
+          "position": "AI产品经理",
+          "hire_date": "2026-10-05",
+          "onboarding_stage": "day_1",
+          "manager": "马晓东",
+          "hr_contact": "李秀娟",
+          "email": "linxiao@company.com",
+          "phone": "138****1001",
+          "account_status": "已开通",
+          "device_status": "已领取",
+          "access_status": "已开通",
+          "stage_label": "入职第1天"
+        },
+        "params": {}
+      },
+      "output": {
+        "intent": "query_onboarding_tasks",
+        "topic": "first_day_tasks",
+        "employee_id": "E001",
+        "department": "产品部",
+        "position": "AI产品经理",
+        "onboarding_stage": "day_1",
+        "need_employee_profile": true,
+        "need_onboarding_task_query": true,
+        "need_policy_query": false,
+        "need_contact_query": false,
+        "need_training_query": false,
+        "sensitive_topic": false,
+        "need_follow_up": false,
+        "missing_fields": []
+      },
+      "status": "success",
+      "engine": "rule",
+      "elapsed_ms": 0.2,
+      "error": null
+    },
+    {
+      "step_id": "S2",
+      "name": "查询员工信息",
+      "type": "tool",
+      "target": "query_employee_info",
+      "purpose": "获取员工身份、部门、岗位、入职阶段与账号设备状态。",
+      "depends_on": [
+        "S1"
+      ],
+      "input": {},
+      "output": {
+        "employee_id": "E001",
+        "name": "林晓",
+        "department": "产品部",
+        "position": "AI产品经理",
+        "hire_date": "2026-10-05",
+        "onboarding_stage": "day_1",
+        "stage_label": "入职第1天",
+        "manager": "马晓东",
+        "hr_contact": "李秀娟",
+        "email": "linxiao@company.com",
+        "phone": "138****1001",
+        "account_status": "已开通",
+        "device_status": "已领取",
+        "access_status": "已开通",
+        "completed_tasks": [
+          "T006",
+          "T005"
+        ],
+        "pending_tasks": [
+          "T001",
+          "T002",
+          "T003",
+          "T004",
+          "T007",
+          "T008",
+          "T009",
+          "T031",
+          "T033"
+        ]
+      },
+      "status": "success",
+      "engine": "code",
+      "elapsed_ms": 0.1,
+      "error": null
+    },
+    {
+      "step_id": "S3",
+      "name": "查询入职任务",
+      "type": "tool",
+      "target": "query_onboarding_tasks",
+      "purpose": "获取适用于该员工的入职任务清单与完成状态。",
+      "depends_on": [
+        "S2"
+      ],
+      "input": {},
+      "output": {
+        "count": 10,
+        "tasks": [
+          {
+            "task_id": "T001",
+            "task_name": "领取办公电脑并完成设备签收",
+            "category": "设备",
+            "stage": "day_1",
+            "priority": "P0",
+            "required": true,
+            "recommended_time": "入职当天上午",
+            "deadline_days": 0,
+            "dependency_tasks": [],
+            "owner": "IT服务台",
+            "description": "携带入职通知到 IT 服务台领取办公电脑，核对设备编号并完成签收登记。",
+            "completed": false
+          },
+          {
+            "task_id": "T002",
+            "task_name": "激活企业邮箱与IM账号",
+            "category": "账号",
+            "stage": "day_1",
+            "priority": "P0",
+            "required": true,
+            "recommended_time": "入职当天",
+            "deadline_days": 1,
+            "dependency_tasks": [
+              "T001"
+            ],
+            "owner": "IT服务台",
+            "description": "使用工号首次登录企业邮箱与 IM，完成密码修改与双因子认证。",
+            "completed": false
+          },
+          {
+            "task_id": "T003",
+            "task_name": "办理工牌与门禁权限",
+            "category": "门禁",
+            "stage": "day_1",
+            "priority": "P0",
+            "required": true,
+            "recommended_time": "入职当天上午",
+            "deadline_days": 1,
+            "dependency_tasks": [],
+            "owner": "行政前台",
+            "description": "到行政前台拍摄工牌照片、领取工牌，并同步开通办公区门禁权限。",
+            "completed": false
+          },
+          {
+            "task_id": "T004",
+            "task_name": "确认工位与办公用品领取",
+            "category": "工位",
+            "stage": "day_1",
+            "priority": "P1",
+            "required": true,
+            "recommended_time": "入职当天下午",
+            "deadline_days": 1,
+            "dependency_tasks": [],
+            "owner": "行政前台",
+            "description": "确认工位位置，领取办公用品与设备外设。",
+            "completed": false
+          },
+          {
+            "task_id": "T005",
+            "task_name": "提交个人入职材料",
+            "category": "材料",
+            "stage": "day_1",
+            "priority": "P0",
+            "required": true,
+            "recommended_time": "入职3天内",
+            "deadline_days": 3,
+            "dependency_tasks": [],
+            "owner": "HR对接人",
+            "description": "在 HRIS 提交身份证、学历证明、银行卡照片与体检报告等入职材料。",
+            "completed": true
+          },
+          {
+            "task_id": "T006",
+            "task_name": "签署劳动合同与保密协议",
+            "category": "合规",
+            "stage": "day_1",
+            "priority": "P0",
+            "required": true,
+            "recommended_time": "入职当天",
+            "deadline_days": 2,
+            "dependency_tasks": [],
+            "owner": "HR对接人",
+            "description": "线下或电子签方式签署劳动合同、保密与竞业协议。",
+            "completed": true
+          },
+          {
+            "task_id": "T007",
+            "task_name": "阅读员工手册并完成入职测验",
+            "category": "制度",
+            "stage": "day_1",
+            "priority": "P1",
+            "required": true,
+            "recommended_time": "入职3天内",
+            "deadline_days": 3,
+            "dependency_tasks": [],
+            "owner": "HR对接人",
+            "description": "阅读员工手册并在学习平台完成入职测验（80分合格）。",
+            "completed": false
+          },
+          {
+            "task_id": "T008",
+            "task_name": "加入部门工作群与全员群",
+            "category": "沟通",
+            "stage": "day_1",
+            "priority": "P1",
+            "required": true,
+            "recommended_time": "入职当天",
+            "deadline_days": 1,
+            "dependency_tasks": [
+              "T002"
+            ],
+            "owner": "直属领导",
+            "description": "由直属领导拉入部门群、项目群与公司全员群。",
+            "completed": false
+          },
+          {
+            "task_id": "T009",
+            "task_name": "与直属领导进行首次沟通",
+            "category": "沟通",
+            "stage": "day_1",
+            "priority": "P1",
+            "required": true,
+            "recommended_time": "入职2天内",
+            "deadline_days": 2,
+            "dependency_tasks": [],
+            "owner": "直属领导",
+            "description": "与直属领导确认岗位职责、试用期目标与协作方式。",
+            "completed": false
+          },
+          {
+            "task_id": "T025",
+            "task_name": "领取办公用品与设备外设",
+            "category": "设备",
+            "stage": "day_1",
+            "priority": "P2",
+            "required": false,
+            "recommended_time": "入职当天",
+            "deadline_days": 1,
+            "dependency_tasks": [],
+            "owner": "行政前台",
+            "description": "领取显示器支架、键鼠等外设与常用办公用品。",
+            "completed": false
+          }
+        ]
+      },
+      "status": "success",
+      "engine": "code",
+      "elapsed_ms": 0.1,
+      "error": null
+    },
+    {
+      "step_id": "S4",
+      "name": "计算任务状态",
+      "type": "tool",
+      "target": "calc_task_status",
+      "purpose": "以代码计算完成率、逾期与阻塞情况，得出优先级排序。",
+      "depends_on": [
+        "S3"
+      ],
+      "input": {},
+      "output": {
+        "employee_id": "E001",
+        "onboarding_progress": 0.2222222222222222,
+        "completed_task_count": 2,
+        "pending_task_count": 8,
+        "overdue_task_count": 8,
+        "overdue_tasks": [
+          {
+            "task_id": "T001",
+            "task_name": "领取办公电脑并完成设备签收",
+            "deadline_days": 0
+          },
+          {
+            "task_id": "T002",
+            "task_name": "激活企业邮箱与IM账号",
+            "deadline_days": 1
+          },
+          {
+            "task_id": "T003",
+            "task_name": "办理工牌与门禁权限",
+            "deadline_days": 1
+          },
+          {
+            "task_id": "T004",
+            "task_name": "确认工位与办公用品领取",
+            "deadline_days": 1
+          },
+          {
+            "task_id": "T007",
+            "task_name": "阅读员工手册并完成入职测验",
+            "deadline_days": 3
+          },
+          {
+            "task_id": "T008",
+            "task_name": "加入部门工作群与全员群",
+            "deadline_days": 1
+          },
+          {
+            "task_id": "T009",
+            "task_name": "与直属领导进行首次沟通",
+            "deadline_days": 2
+          },
+          {
+            "task_id": "T025",
+            "task_name": "领取办公用品与设备外设",
+            "deadline_days": 1
+          }
+        ],
+        "blocked_tasks": [
+          {
+            "task_id": "T002",
+            "task_name": "激活企业邮箱与IM账号"
+          },
+          {
+            "task_id": "T008",
+            "task_name": "加入部门工作群与全员群"
+          }
+        ],
+        "next_priority_tasks": [
+          {
+            "task_id": "T001",
+            "task_name": "领取办公电脑并完成设备签收",
+            "priority": "P0",
+            "required": true,
+            "recommended_time": "入职当天上午",
+            "owner": "IT服务台",
+            "description": "携带入职通知到 IT 服务台领取办公电脑，核对设备编号并完成签收登记。"
+          },
+          {
+            "task_id": "T003",
+            "task_name": "办理工牌与门禁权限",
+            "priority": "P0",
+            "required": true,
+            "recommended_time": "入职当天上午",
+            "owner": "行政前台",
+            "description": "到行政前台拍摄工牌照片、领取工牌，并同步开通办公区门禁权限。"
+          },
+          {
+            "task_id": "T004",
+            "task_name": "确认工位与办公用品领取",
+            "priority": "P1",
+            "required": true,
+            "recommended_time": "入职当天下午",
+            "owner": "行政前台",
+            "description": "确认工位位置，领取办公用品与设备外设。"
+          },
+          {
+            "task_id": "T007",
+            "task_name": "阅读员工手册并完成入职测验",
+            "priority": "P1",
+            "required": true,
+            "recommended_time": "入职3天内",
+            "owner": "HR对接人",
+            "description": "阅读员工手册并在学习平台完成入职测验（80分合格）。"
+          },
+          {
+            "task_id": "T009",
+            "task_name": "与直属领导进行首次沟通",
+            "priority": "P1",
+            "required": true,
+            "recommended_time": "入职2天内",
+            "owner": "直属领导",
+            "description": "与直属领导确认岗位职责、试用期目标与协作方式。"
+          }
+        ],
+        "can_enter_next_stage": false
+      },
+      "status": "success",
+      "engine": "code",
+      "elapsed_ms": 0.2,
+      "error": null
+    },
+    {
+      "step_id": "S5",
+      "name": "入职任务决策",
+      "type": "skill",
+      "target": "task_decision",
+      "purpose": "基于任务数据判断当前应优先完成的事项。",
+      "depends_on": [
+        "S2",
+        "S3",
+        "S4"
+      ],
+      "input": {
+        "question": "我入职第一天需要做什么？",
+        "employee": {
+          "employee_id": "E001",
+          "name": "林晓",
+          "department": "产品部",
+          "position": "AI产品经理",
+          "hire_date": "2026-10-05",
+          "onboarding_stage": "day_1",
+          "manager": "马晓东",
+          "hr_contact": "李秀娟",
+          "email": "linxiao@company.com",
+          "phone": "138****1001",
+          "account_status": "已开通",
+          "device_status": "已领取",
+          "access_status": "已开通",
+          "stage_label": "入职第1天"
+        },
+        "params": {},
+        "query_employee_info": {
+          "employee_id": "E001",
+          "name": "林晓",
+          "department": "产品部",
+          "position": "AI产品经理",
+          "hire_date": "2026-10-05",
+          "onboarding_stage": "day_1",
+          "stage_label": "入职第1天",
+          "manager": "马晓东",
+          "hr_contact": "李秀娟",
+          "email": "linxiao@company.com",
+          "phone": "138****1001",
+          "account_status": "已开通",
+          "device_status": "已领取",
+          "access_status": "已开通",
+          "completed_tasks": [
+            "T006",
+            "T005"
+          ],
+          "pending_tasks": [
+            "T001",
+            "T002",
+            "T003",
+            "T004",
+            "T007",
+            "T008",
+            "T009",
+            "T031",
+            "T033"
+          ]
+        },
+        "query_onboarding_tasks": {
+          "count": 10,
+          "tasks": [
+            {
+              "task_id": "T001",
+              "task_name": "领取办公电脑并完成设备签收",
+              "category": "设备",
+              "stage": "day_1",
+              "priority": "P0",
+              "required": true,
+              "recommended_time": "入职当天上午",
+              "deadline_days": 0,
+              "dependency_tasks": [],
+              "owner": "IT服务台",
+              "description": "携带入职通知到 IT 服务台领取办公电脑，核对设备编号并完成签收登记。",
+              "completed": false
+            },
+            {
+              "task_id": "T002",
+              "task_name": "激活企业邮箱与IM账号",
+              "category": "账号",
+              "stage": "day_1",
+              "priority": "P0",
+              "required": true,
+              "recommended_time": "入职当天",
+              "deadline_days": 1,
+              "dependency_tasks": [
+                "T001"
+              ],
+              "owner": "IT服务台",
+              "description": "使用工号首次登录企业邮箱与 IM，完成密码修改与双因子认证。",
+              "completed": false
+            },
+            {
+              "task_id": "T003",
+              "task_name": "办理工牌与门禁权限",
+              "category": "门禁",
+              "stage": "day_1",
+              "priority": "P0",
+              "required": true,
+              "recommended_time": "入职当天上午",
+              "deadline_days": 1,
+              "dependency_tasks": [],
+              "owner": "行政前台",
+              "description": "到行政前台拍摄工牌照片、领取工牌，并同步开通办公区门禁权限。",
+              "completed": false
+            },
+            {
+              "task_id": "T004",
+              "task_name": "确认工位与办公用品领取",
+              "category": "工位",
+              "stage": "day_1",
+              "priority": "P1",
+              "required": true,
+              "recommended_time": "入职当天下午",
+              "deadline_days": 1,
+              "dependency_tasks": [],
+              "owner": "行政前台",
+              "description": "确认工位位置，领取办公用品与设备外设。",
+              "completed": false
+            },
+            {
+              "task_id": "T005",
+              "task_name": "提交个人入职材料",
+              "category": "材料",
+              "stage": "day_1",
+              "priority": "P0",
+              "required": true,
+              "recommended_time": "入职3天内",
+              "deadline_days": 3,
+              "dependency_tasks": [],
+              "owner": "HR对接人",
+              "description": "在 HRIS 提交身份证、学历证明、银行卡照片与体检报告等入职材料。",
+              "completed": true
+            },
+            {
+              "task_id": "T006",
+              "task_name": "签署劳动合同与保密协议",
+              "category": "合规",
+              "stage": "day_1",
+              "priority": "P0",
+              "required": true,
+              "recommended_time": "入职当天",
+              "deadline_days": 2,
+              "dependency_tasks": [],
+              "owner": "HR对接人",
+              "description": "线下或电子签方式签署劳动合同、保密与竞业协议。",
+              "completed": true
+            },
+            {
+              "task_id": "T007",
+              "task_name": "阅读员工手册并完成入职测验",
+              "category": "制度",
+              "stage": "day_1",
+              "priority": "P1",
+              "required": true,
+              "recommended_time": "入职3天内",
+              "deadline_days": 3,
+              "dependency_tasks": [],
+              "owner": "HR对接人",
+              "description": "阅读员工手册并在学习平台完成入职测验（80分合格）。",
+              "completed": false
+            },
+            {
+              "task_id": "T008",
+              "task_name": "加入部门工作群与全员群",
+              "category": "沟通",
+              "stage": "day_1",
+              "priority": "P1",
+              "required": true,
+              "recommended_time": "入职当天",
+              "deadline_days": 1,
+              "dependency_tasks": [
+                "T002"
+              ],
+              "owner": "直属领导",
+              "description": "由直属领导拉入部门群、项目群与公司全员群。",
+              "completed": false
+            },
+            {
+              "task_id": "T009",
+              "task_name": "与直属领导进行首次沟通",
+              "category": "沟通",
+              "stage": "day_1",
+              "priority": "P1",
+              "required": true,
+              "recommended_time": "入职2天内",
+              "deadline_days": 2,
+              "dependency_tasks": [],
+              "owner": "直属领导",
+              "description": "与直属领导确认岗位职责、试用期目标与协作方式。",
+              "completed": false
+            },
+            {
+              "task_id": "T025",
+              "task_name": "领取办公用品与设备外设",
+              "category": "设备",
+              "stage": "day_1",
+              "priority": "P2",
+              "required": false,
+              "recommended_time": "入职当天",
+              "deadline_days": 1,
+              "dependency_tasks": [],
+              "owner": "行政前台",
+              "description": "领取显示器支架、键鼠等外设与常用办公用品。",
+              "completed": false
+            }
+          ]
+        },
+        "calc_task_status": {
+          "employee_id": "E001",
+          "onboarding_progress": 0.2222222222222222,
+          "completed_task_count": 2,
+          "pending_task_count": 8,
+          "overdue_task_count": 8,
+          "overdue_tasks": [
+            {
+              "task_id": "T001",
+              "task_name": "领取办公电脑并完成设备签收",
+              "deadline_days": 0
+            },
+            {
+              "task_id": "T002",
+              "task_name": "激活企业邮箱与IM账号",
+              "deadline_days": 1
+            },
+            {
+              "task_id": "T003",
+              "task_name": "办理工牌与门禁权限",
+              "deadline_days": 1
+            },
+            {
+              "task_id": "T004",
+              "task_name": "确认工位与办公用品领取",
+              "deadline_days": 1
+            },
+            {
+              "task_id": "T007",
+              "task_name": "阅读员工手册并完成入职测验",
+              "deadline_days": 3
+            },
+            {
+              "task_id": "T008",
+              "task_name": "加入部门工作群与全员群",
+              "deadline_days": 1
+            },
+            {
+              "task_id": "T009",
+              "task_name": "与直属领导进行首次沟通",
+              "deadline_days": 2
+            },
+            {
+              "task_id": "T025",
+              "task_name": "领取办公用品与设备外设",
+              "deadline_days": 1
+            }
+          ],
+          "blocked_tasks": [
+            {
+              "task_id": "T002",
+              "task_name": "激活企业邮箱与IM账号"
+            },
+            {
+              "task_id": "T008",
+              "task_name": "加入部门工作群与全员群"
+            }
+          ],
+          "next_priority_tasks": [
+            {
+              "task_id": "T001",
+              "task_name": "领取办公电脑并完成设备签收",
+              "priority": "P0",
+              "required": true,
+              "recommended_time": "入职当天上午",
+              "owner": "IT服务台",
+              "description": "携带入职通知到 IT 服务台领取办公电脑，核对设备编号并完成签收登记。"
+            },
+            {
+              "task_id": "T003",
+              "task_name": "办理工牌与门禁权限",
+              "priority": "P0",
+              "required": true,
+              "recommended_time": "入职当天上午",
+              "owner": "行政前台",
+              "description": "到行政前台拍摄工牌照片、领取工牌，并同步开通办公区门禁权限。"
+            },
+            {
+              "task_id": "T004",
+              "task_name": "确认工位与办公用品领取",
+              "priority": "P1",
+              "required": true,
+              "recommended_time": "入职当天下午",
+              "owner": "行政前台",
+              "description": "确认工位位置，领取办公用品与设备外设。"
+            },
+            {
+              "task_id": "T007",
+              "task_name": "阅读员工手册并完成入职测验",
+              "priority": "P1",
+              "required": true,
+              "recommended_time": "入职3天内",
+              "owner": "HR对接人",
+              "description": "阅读员工手册并在学习平台完成入职测验（80分合格）。"
+            },
+            {
+              "task_id": "T009",
+              "task_name": "与直属领导进行首次沟通",
+              "priority": "P1",
+              "required": true,
+              "recommended_time": "入职2天内",
+              "owner": "直属领导",
+              "description": "与直属领导确认岗位职责、试用期目标与协作方式。"
+            }
+          ],
+          "can_enter_next_stage": false
+        }
+      },
+      "output": {
+        "recommended_tasks": [
+          {
+            "task_id": "T001",
+            "task_name": "领取办公电脑并完成设备签收",
+            "priority": "P0",
+            "required": true,
+            "recommended_time": "入职当天上午",
+            "dependency_tasks": [],
+            "owner": "IT服务台",
+            "reason": "该任务已逾期，请尽快完成。携带入职通知到 IT 服务台领取办公电脑，核对设备编号并完成签收登记。"
+          },
+          {
+            "task_id": "T003",
+            "task_name": "办理工牌与门禁权限",
+            "priority": "P0",
+            "required": true,
+            "recommended_time": "入职当天上午",
+            "dependency_tasks": [],
+            "owner": "行政前台",
+            "reason": "该任务已逾期，请尽快完成。到行政前台拍摄工牌照片、领取工牌，并同步开通办公区门禁权限。"
+          },
+          {
+            "task_id": "T004",
+            "task_name": "确认工位与办公用品领取",
+            "priority": "P1",
+            "required": true,
+            "recommended_time": "入职当天下午",
+            "dependency_tasks": [],
+            "owner": "行政前台",
+            "reason": "该任务已逾期，请尽快完成。确认工位位置，领取办公用品与设备外设。"
+          },
+          {
+            "task_id": "T007",
+            "task_name": "阅读员工手册并完成入职测验",
+            "priority": "P1",
+            "required": true,
+            "recommended_time": "入职3天内",
+            "dependency_tasks": [],
+            "owner": "HR对接人",
+            "reason": "该任务已逾期，请尽快完成。阅读员工手册并在学习平台完成入职测验（80分合格）。"
+          },
+          {
+            "task_id": "T009",
+            "task_name": "与直属领导进行首次沟通",
+            "priority": "P1",
+            "required": true,
+            "recommended_time": "入职2天内",
+            "dependency_tasks": [],
+            "owner": "直属领导",
+            "reason": "该任务已逾期，请尽快完成。与直属领导确认岗位职责、试用期目标与协作方式。"
+          }
+        ],
+        "summary": "当前入职完成率约 22%，还有 8 项任务未完成，其中 8 项已逾期。建议按下方优先级顺序推进。"
+      },
+      "status": "success",
+      "engine": "rule",
+      "elapsed_ms": 0,
+      "error": null
+    },
+    {
+      "step_id": "S6",
+      "name": "生成沟通话术",
+      "type": "skill",
+      "target": "communication",
+      "purpose": "汇总所有查询与技能结果，生成面向员工的最终回复。",
+      "depends_on": [
+        "S1",
+        "S2",
+        "S3",
+        "S4",
+        "S5"
+      ],
+      "input": {
+        "question": "我入职第一天需要做什么？",
+        "employee": {
+          "employee_id": "E001",
+          "name": "林晓",
+          "department": "产品部",
+          "position": "AI产品经理",
+          "hire_date": "2026-10-05",
+          "onboarding_stage": "day_1",
+          "manager": "马晓东",
+          "hr_contact": "李秀娟",
+          "email": "linxiao@company.com",
+          "phone": "138****1001",
+          "account_status": "已开通",
+          "device_status": "已领取",
+          "access_status": "已开通",
+          "stage_label": "入职第1天"
+        },
+        "params": {},
+        "question_structuring": {
+          "intent": "query_onboarding_tasks",
+          "topic": "first_day_tasks",
+          "employee_id": "E001",
+          "department": "产品部",
+          "position": "AI产品经理",
+          "onboarding_stage": "day_1",
+          "need_employee_profile": true,
+          "need_onboarding_task_query": true,
+          "need_policy_query": false,
+          "need_contact_query": false,
+          "need_training_query": false,
+          "sensitive_topic": false,
+          "need_follow_up": false,
+          "missing_fields": []
+        },
+        "query_employee_info": {
+          "employee_id": "E001",
+          "name": "林晓",
+          "department": "产品部",
+          "position": "AI产品经理",
+          "hire_date": "2026-10-05",
+          "onboarding_stage": "day_1",
+          "stage_label": "入职第1天",
+          "manager": "马晓东",
+          "hr_contact": "李秀娟",
+          "email": "linxiao@company.com",
+          "phone": "138****1001",
+          "account_status": "已开通",
+          "device_status": "已领取",
+          "access_status": "已开通",
+          "completed_tasks": [
+            "T006",
+            "T005"
+          ],
+          "pending_tasks": [
+            "T001",
+            "T002",
+            "T003",
+            "T004",
+            "T007",
+            "T008",
+            "T009",
+            "T031",
+            "T033"
+          ]
+        },
+        "query_onboarding_tasks": {
+          "count": 10,
+          "tasks": [
+            {
+              "task_id": "T001",
+              "task_name": "领取办公电脑并完成设备签收",
+              "category": "设备",
+              "stage": "day_1",
+              "priority": "P0",
+              "required": true,
+              "recommended_time": "入职当天上午",
+              "deadline_days": 0,
+              "dependency_tasks": [],
+              "owner": "IT服务台",
+              "description": "携带入职通知到 IT 服务台领取办公电脑，核对设备编号并完成签收登记。",
+              "completed": false
+            },
+            {
+              "task_id": "T002",
+              "task_name": "激活企业邮箱与IM账号",
+              "category": "账号",
+              "stage": "day_1",
+              "priority": "P0",
+              "required": true,
+              "recommended_time": "入职当天",
+              "deadline_days": 1,
+              "dependency_tasks": [
+                "T001"
+              ],
+              "owner": "IT服务台",
+              "description": "使用工号首次登录企业邮箱与 IM，完成密码修改与双因子认证。",
+              "completed": false
+            },
+            {
+              "task_id": "T003",
+              "task_name": "办理工牌与门禁权限",
+              "category": "门禁",
+              "stage": "day_1",
+              "priority": "P0",
+              "required": true,
+              "recommended_time": "入职当天上午",
+              "deadline_days": 1,
+              "dependency_tasks": [],
+              "owner": "行政前台",
+              "description": "到行政前台拍摄工牌照片、领取工牌，并同步开通办公区门禁权限。",
+              "completed": false
+            },
+            {
+              "task_id": "T004",
+              "task_name": "确认工位与办公用品领取",
+              "category": "工位",
+              "stage": "day_1",
+              "priority": "P1",
+              "required": true,
+              "recommended_time": "入职当天下午",
+              "deadline_days": 1,
+              "dependency_tasks": [],
+              "owner": "行政前台",
+              "description": "确认工位位置，领取办公用品与设备外设。",
+              "completed": false
+            },
+            {
+              "task_id": "T005",
+              "task_name": "提交个人入职材料",
+              "category": "材料",
+              "stage": "day_1",
+              "priority": "P0",
+              "required": true,
+              "recommended_time": "入职3天内",
+              "deadline_days": 3,
+              "dependency_tasks": [],
+              "owner": "HR对接人",
+              "description": "在 HRIS 提交身份证、学历证明、银行卡照片与体检报告等入职材料。",
+              "completed": true
+            },
+            {
+              "task_id": "T006",
+              "task_name": "签署劳动合同与保密协议",
+              "category": "合规",
+              "stage": "day_1",
+              "priority": "P0",
+              "required": true,
+              "recommended_time": "入职当天",
+              "deadline_days": 2,
+              "dependency_tasks": [],
+              "owner": "HR对接人",
+              "description": "线下或电子签方式签署劳动合同、保密与竞业协议。",
+              "completed": true
+            },
+            {
+              "task_id": "T007",
+              "task_name": "阅读员工手册并完成入职测验",
+              "category": "制度",
+              "stage": "day_1",
+              "priority": "P1",
+              "required": true,
+              "recommended_time": "入职3天内",
+              "deadline_days": 3,
+              "dependency_tasks": [],
+              "owner": "HR对接人",
+              "description": "阅读员工手册并在学习平台完成入职测验（80分合格）。",
+              "completed": false
+            },
+            {
+              "task_id": "T008",
+              "task_name": "加入部门工作群与全员群",
+              "category": "沟通",
+              "stage": "day_1",
+              "priority": "P1",
+              "required": true,
+              "recommended_time": "入职当天",
+              "deadline_days": 1,
+              "dependency_tasks": [
+                "T002"
+              ],
+              "owner": "直属领导",
+              "description": "由直属领导拉入部门群、项目群与公司全员群。",
+              "completed": false
+            },
+            {
+              "task_id": "T009",
+              "task_name": "与直属领导进行首次沟通",
+              "category": "沟通",
+              "stage": "day_1",
+              "priority": "P1",
+              "required": true,
+              "recommended_time": "入职2天内",
+              "deadline_days": 2,
+              "dependency_tasks": [],
+              "owner": "直属领导",
+              "description": "与直属领导确认岗位职责、试用期目标与协作方式。",
+              "completed": false
+            },
+            {
+              "task_id": "T025",
+              "task_name": "领取办公用品与设备外设",
+              "category": "设备",
+              "stage": "day_1",
+              "priority": "P2",
+              "required": false,
+              "recommended_time": "入职当天",
+              "deadline_days": 1,
+              "dependency_tasks": [],
+              "owner": "行政前台",
+              "description": "领取显示器支架、键鼠等外设与常用办公用品。",
+              "completed": false
+            }
+          ]
+        },
+        "calc_task_status": {
+          "employee_id": "E001",
+          "onboarding_progress": 0.2222222222222222,
+          "completed_task_count": 2,
+          "pending_task_count": 8,
+          "overdue_task_count": 8,
+          "overdue_tasks": [
+            {
+              "task_id": "T001",
+              "task_name": "领取办公电脑并完成设备签收",
+              "deadline_days": 0
+            },
+            {
+              "task_id": "T002",
+              "task_name": "激活企业邮箱与IM账号",
+              "deadline_days": 1
+            },
+            {
+              "task_id": "T003",
+              "task_name": "办理工牌与门禁权限",
+              "deadline_days": 1
+            },
+            {
+              "task_id": "T004",
+              "task_name": "确认工位与办公用品领取",
+              "deadline_days": 1
+            },
+            {
+              "task_id": "T007",
+              "task_name": "阅读员工手册并完成入职测验",
+              "deadline_days": 3
+            },
+            {
+              "task_id": "T008",
+              "task_name": "加入部门工作群与全员群",
+              "deadline_days": 1
+            },
+            {
+              "task_id": "T009",
+              "task_name": "与直属领导进行首次沟通",
+              "deadline_days": 2
+            },
+            {
+              "task_id": "T025",
+              "task_name": "领取办公用品与设备外设",
+              "deadline_days": 1
+            }
+          ],
+          "blocked_tasks": [
+            {
+              "task_id": "T002",
+              "task_name": "激活企业邮箱与IM账号"
+            },
+            {
+              "task_id": "T008",
+              "task_name": "加入部门工作群与全员群"
+            }
+          ],
+          "next_priority_tasks": [
+            {
+              "task_id": "T001",
+              "task_name": "领取办公电脑并完成设备签收",
+              "priority": "P0",
+              "required": true,
+              "recommended_time": "入职当天上午",
+              "owner": "IT服务台",
+              "description": "携带入职通知到 IT 服务台领取办公电脑，核对设备编号并完成签收登记。"
+            },
+            {
+              "task_id": "T003",
+              "task_name": "办理工牌与门禁权限",
+              "priority": "P0",
+              "required": true,
+              "recommended_time": "入职当天上午",
+              "owner": "行政前台",
+              "description": "到行政前台拍摄工牌照片、领取工牌，并同步开通办公区门禁权限。"
+            },
+            {
+              "task_id": "T004",
+              "task_name": "确认工位与办公用品领取",
+              "priority": "P1",
+              "required": true,
+              "recommended_time": "入职当天下午",
+              "owner": "行政前台",
+              "description": "确认工位位置，领取办公用品与设备外设。"
+            },
+            {
+              "task_id": "T007",
+              "task_name": "阅读员工手册并完成入职测验",
+              "priority": "P1",
+              "required": true,
+              "recommended_time": "入职3天内",
+              "owner": "HR对接人",
+              "description": "阅读员工手册并在学习平台完成入职测验（80分合格）。"
+            },
+            {
+              "task_id": "T009",
+              "task_name": "与直属领导进行首次沟通",
+              "priority": "P1",
+              "required": true,
+              "recommended_time": "入职2天内",
+              "owner": "直属领导",
+              "description": "与直属领导确认岗位职责、试用期目标与协作方式。"
+            }
+          ],
+          "can_enter_next_stage": false
+        },
+        "task_decision": {
+          "recommended_tasks": [
+            {
+              "task_id": "T001",
+              "task_name": "领取办公电脑并完成设备签收",
+              "priority": "P0",
+              "required": true,
+              "recommended_time": "入职当天上午",
+              "dependency_tasks": [],
+              "owner": "IT服务台",
+              "reason": "该任务已逾期，请尽快完成。携带入职通知到 IT 服务台领取办公电脑，核对设备编号并完成签收登记。"
+            },
+            {
+              "task_id": "T003",
+              "task_name": "办理工牌与门禁权限",
+              "priority": "P0",
+              "required": true,
+              "recommended_time": "入职当天上午",
+              "dependency_tasks": [],
+              "owner": "行政前台",
+              "reason": "该任务已逾期，请尽快完成。到行政前台拍摄工牌照片、领取工牌，并同步开通办公区门禁权限。"
+            },
+            {
+              "task_id": "T004",
+              "task_name": "确认工位与办公用品领取",
+              "priority": "P1",
+              "required": true,
+              "recommended_time": "入职当天下午",
+              "dependency_tasks": [],
+              "owner": "行政前台",
+              "reason": "该任务已逾期，请尽快完成。确认工位位置，领取办公用品与设备外设。"
+            },
+            {
+              "task_id": "T007",
+              "task_name": "阅读员工手册并完成入职测验",
+              "priority": "P1",
+              "required": true,
+              "recommended_time": "入职3天内",
+              "dependency_tasks": [],
+              "owner": "HR对接人",
+              "reason": "该任务已逾期，请尽快完成。阅读员工手册并在学习平台完成入职测验（80分合格）。"
+            },
+            {
+              "task_id": "T009",
+              "task_name": "与直属领导进行首次沟通",
+              "priority": "P1",
+              "required": true,
+              "recommended_time": "入职2天内",
+              "dependency_tasks": [],
+              "owner": "直属领导",
+              "reason": "该任务已逾期，请尽快完成。与直属领导确认岗位职责、试用期目标与协作方式。"
+            }
+          ],
+          "summary": "当前入职完成率约 22%，还有 8 项任务未完成，其中 8 项已逾期。建议按下方优先级顺序推进。"
+        }
+      },
+      "output": {
+        "reply": "你好，林晓！关于「我入职第一天需要做什么？」，为你整理如下信息：\n\n一、建议你优先完成的事项\n1.（P0·必做）领取办公电脑并完成设备签收｜建议时间：入职当天上午｜负责人：IT服务台\n2.（P0·必做）办理工牌与门禁权限｜建议时间：入职当天上午｜负责人：行政前台\n3.（P1·必做）确认工位与办公用品领取｜建议时间：入职当天下午｜负责人：行政前台\n4.（P1·必做）阅读员工手册并完成入职测验｜建议时间：入职3天内｜负责人：HR对接人\n5.（P1·必做）与直属领导进行首次沟通｜建议时间：入职2天内｜负责人：直属领导\n小结：当前入职完成率约 22%，还有 8 项任务未完成，其中 8 项已逾期。建议按下方优先级顺序推进。\n\n以上信息以系统内最新数据为准，涉及个人具体安排请以 HR 或直属领导确认为准。如还有其他问题，随时问我。"
+      },
+      "status": "success",
+      "engine": "rule",
+      "elapsed_ms": 0.1,
+      "error": null
+    },
+    {
+      "step_id": "S7",
+      "name": "合规与风险审核",
+      "type": "skill",
+      "target": "compliance_check",
+      "purpose": "审核最终回复的合规与风险，通过后才允许返回。",
+      "depends_on": [
+        "S6"
+      ],
+      "input": {
+        "question": "我入职第一天需要做什么？",
+        "employee": {
+          "employee_id": "E001",
+          "name": "林晓",
+          "department": "产品部",
+          "position": "AI产品经理",
+          "hire_date": "2026-10-05",
+          "onboarding_stage": "day_1",
+          "manager": "马晓东",
+          "hr_contact": "李秀娟",
+          "email": "linxiao@company.com",
+          "phone": "138****1001",
+          "account_status": "已开通",
+          "device_status": "已领取",
+          "access_status": "已开通",
+          "stage_label": "入职第1天"
+        },
+        "params": {},
+        "communication": {
+          "reply": "你好，林晓！关于「我入职第一天需要做什么？」，为你整理如下信息：\n\n一、建议你优先完成的事项\n1.（P0·必做）领取办公电脑并完成设备签收｜建议时间：入职当天上午｜负责人：IT服务台\n2.（P0·必做）办理工牌与门禁权限｜建议时间：入职当天上午｜负责人：行政前台\n3.（P1·必做）确认工位与办公用品领取｜建议时间：入职当天下午｜负责人：行政前台\n4.（P1·必做）阅读员工手册并完成入职测验｜建议时间：入职3天内｜负责人：HR对接人\n5.（P1·必做）与直属领导进行首次沟通｜建议时间：入职2天内｜负责人：直属领导\n小结：当前入职完成率约 22%，还有 8 项任务未完成，其中 8 项已逾期。建议按下方优先级顺序推进。\n\n以上信息以系统内最新数据为准，涉及个人具体安排请以 HR 或直属领导确认为准。如还有其他问题，随时问我。"
+        },
+        "draft_reply": "你好，林晓！关于「我入职第一天需要做什么？」，为你整理如下信息：\n\n一、建议你优先完成的事项\n1.（P0·必做）领取办公电脑并完成设备签收｜建议时间：入职当天上午｜负责人：IT服务台\n2.（P0·必做）办理工牌与门禁权限｜建议时间：入职当天上午｜负责人：行政前台\n3.（P1·必做）确认工位与办公用品领取｜建议时间：入职当天下午｜负责人：行政前台\n4.（P1·必做）阅读员工手册并完成入职测验｜建议时间：入职3天内｜负责人：HR对接人\n5.（P1·必做）与直属领导进行首次沟通｜建议时间：入职2天内｜负责人：直属领导\n小结：当前入职完成率约 22%，还有 8 项任务未完成，其中 8 项已逾期。建议按下方优先级顺序推进。\n\n以上信息以系统内最新数据为准，涉及个人具体安排请以 HR 或直属领导确认为准。如还有其他问题，随时问我。"
+      },
+      "output": {
+        "risk_level": "low",
+        "passed": true,
+        "issues": [],
+        "suggestions": [
+          "回复内容基于当前可查询的入职任务、制度与联系人数据生成，未发现明显合规风险。"
+        ],
+        "final_reply": "你好，林晓！关于「我入职第一天需要做什么？」，为你整理如下信息：\n\n一、建议你优先完成的事项\n1.（P0·必做）领取办公电脑并完成设备签收｜建议时间：入职当天上午｜负责人：IT服务台\n2.（P0·必做）办理工牌与门禁权限｜建议时间：入职当天上午｜负责人：行政前台\n3.（P1·必做）确认工位与办公用品领取｜建议时间：入职当天下午｜负责人：行政前台\n4.（P1·必做）阅读员工手册并完成入职测验｜建议时间：入职3天内｜负责人：HR对接人\n5.（P1·必做）与直属领导进行首次沟通｜建议时间：入职2天内｜负责人：直属领导\n小结：当前入职完成率约 22%，还有 8 项任务未完成，其中 8 项已逾期。建议按下方优先级顺序推进。\n\n以上信息以系统内最新数据为准，涉及个人具体安排请以 HR 或直属领导确认为准。如还有其他问题，随时问我。"
+      },
+      "status": "success",
+      "engine": "rule",
+      "elapsed_ms": 0.2,
+      "error": null
+    }
+  ],
+  "final_reply": "你好，林晓！关于「我入职第一天需要做什么？」，为你整理如下信息：\n\n一、建议你优先完成的事项\n1.（P0·必做）领取办公电脑并完成设备签收｜建议时间：入职当天上午｜负责人：IT服务台\n2.（P0·必做）办理工牌与门禁权限｜建议时间：入职当天上午｜负责人：行政前台\n3.（P1·必做）确认工位与办公用品领取｜建议时间：入职当天下午｜负责人：行政前台\n4.（P1·必做）阅读员工手册并完成入职测验｜建议时间：入职3天内｜负责人：HR对接人\n5.（P1·必做）与直属领导进行首次沟通｜建议时间：入职2天内｜负责人：直属领导\n小结：当前入职完成率约 22%，还有 8 项任务未完成，其中 8 项已逾期。建议按下方优先级顺序推进。\n\n以上信息以系统内最新数据为准，涉及个人具体安排请以 HR 或直属领导确认为准。如还有其他问题，随时问我。",
+  "risk_result": {
+    "risk_level": "low",
+    "passed": true,
+    "issues": [],
+    "suggestions": [
+      "回复内容基于当前可查询的入职任务、制度与联系人数据生成，未发现明显合规风险。"
+    ],
+    "final_reply": "你好，林晓！关于「我入职第一天需要做什么？」，为你整理如下信息：\n\n一、建议你优先完成的事项\n1.（P0·必做）领取办公电脑并完成设备签收｜建议时间：入职当天上午｜负责人：IT服务台\n2.（P0·必做）办理工牌与门禁权限｜建议时间：入职当天上午｜负责人：行政前台\n3.（P1·必做）确认工位与办公用品领取｜建议时间：入职当天下午｜负责人：行政前台\n4.（P1·必做）阅读员工手册并完成入职测验｜建议时间：入职3天内｜负责人：HR对接人\n5.（P1·必做）与直属领导进行首次沟通｜建议时间：入职2天内｜负责人：直属领导\n小结：当前入职完成率约 22%，还有 8 项任务未完成，其中 8 项已逾期。建议按下方优先级顺序推进。\n\n以上信息以系统内最新数据为准，涉及个人具体安排请以 HR 或直属领导确认为准。如还有其他问题，随时问我。"
+  },
+  "warnings": [],
+  "errors": [],
+  "duration_ms": 1.3
+}

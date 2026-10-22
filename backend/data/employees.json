@@ -1,0 +1,304 @@
+{
+  "employees": [
+    {
+      "employee_id": "E001",
+      "name": "林晓",
+      "department": "产品部",
+      "position": "AI产品经理",
+      "hire_date": "2026-10-09",
+      "work_location": "上海总部",
+      "manager": "陈国峰",
+      "hr_contact": "王雅婷",
+      "email": "linxiao@company.com",
+      "onboarding_stage": "day_1",
+      "stage_label": "入职第1天",
+      "account_status": {
+        "enterprise_email": "待激活",
+        "enterprise_im": "待激活",
+        "oa_system": "未开通"
+      },
+      "device_status": {
+        "laptop": "待领取",
+        "monitor": "待领取",
+        "access_card": "待办理"
+      },
+      "access_status": {
+        "office_door": "未开通",
+        "floor_access": "未开通",
+        "vpn": "未开通"
+      },
+      "completed_tasks": [],
+      "pending_tasks": ["T001", "T002", "T003", "T004", "T005", "T006", "T007", "T008", "T012", "T013", "T031"]
+    },
+    {
+      "employee_id": "E002",
+      "name": "张一辰",
+      "department": "研发部",
+      "position": "后端开发工程师",
+      "hire_date": "2026-10-01",
+      "work_location": "上海总部",
+      "manager": "刘建军",
+      "hr_contact": "王雅婷",
+      "email": "zhangyichen@company.com",
+      "onboarding_stage": "week_1",
+      "stage_label": "入职第1周",
+      "account_status": {
+        "enterprise_email": "已激活",
+        "enterprise_im": "已激活",
+        "oa_system": "已开通"
+      },
+      "device_status": {
+        "laptop": "已领取",
+        "monitor": "已领取",
+        "access_card": "已办理"
+      },
+      "access_status": {
+        "office_door": "已开通",
+        "floor_access": "已开通",
+        "vpn": "未开通"
+      },
+      "completed_tasks": ["T001", "T002", "T003", "T004", "T005", "T006", "T007", "T008", "T012", "T013", "T031"],
+      "pending_tasks": ["T009", "T010", "T011", "T014", "T015", "T016", "T019", "T032", "T034", "T035", "T036"]
+    },
+    {
+      "employee_id": "E003",
+      "name": "李慕青",
+      "department": "设计部",
+      "position": "UI/UX设计师",
+      "hire_date": "2026-09-21",
+      "work_location": "上海总部",
+      "manager": "赵思颖",
+      "hr_contact": "孙倩",
+      "email": "limuqing@company.com",
+      "onboarding_stage": "week_1",
+      "stage_label": "入职第1周",
+      "account_status": {
+        "enterprise_email": "已激活",
+        "enterprise_im": "已激活",
+        "oa_system": "已开通"
+      },
+      "device_status": {
+        "laptop": "已领取",
+        "monitor": "已领取",
+        "access_card": "已办理"
+      },
+      "access_status": {
+        "office_door": "已开通",
+        "floor_access": "已开通",
+        "vpn": "未开通"
+      },
+      "completed_tasks": ["T001", "T002", "T003", "T004", "T005", "T006", "T007", "T008", "T012", "T013", "T031", "T009"],
+      "pending_tasks": ["T010", "T011", "T014", "T015", "T016", "T019", "T032", "T034", "T035", "T036"]
+    },
+    {
+      "employee_id": "E004",
+      "name": "王浩然",
+      "department": "销售部",
+      "position": "大客户销售经理",
+      "hire_date": "2026-08-31",
+      "work_location": "上海总部",
+      "manager": "周敏",
+      "hr_contact": "孙倩",
+      "email": "wanghaoran@company.com",
+      "onboarding_stage": "month_1",
+      "stage_label": "入职第1个月",
+      "account_status": {
+        "enterprise_email": "已激活",
+        "enterprise_im": "已激活",
+        "oa_system": "已开通"
+      },
+      "device_status": {
+        "laptop": "已领取",
+        "monitor": "已领取",
+        "access_card": "已办理"
+      },
+      "access_status": {
+        "office_door": "已开通",
+        "floor_access": "已开通",
+        "vpn": "已开通"
+      },
+      "completed_tasks": ["T001", "T002", "T003", "T004", "T005", "T006", "T007", "T008", "T009", "T010", "T011", "T012", "T013", "T014", "T015", "T016", "T019", "T031", "T032", "T034", "T035", "T036"],
+      "pending_tasks": ["T018", "T020", "T021", "T022", "T025", "T027", "T033"]
+    },
+    {
+      "employee_id": "E005",
+      "name": "陈思远",
+      "department": "财务部",
+      "position": "财务分析师",
+      "hire_date": "2026-08-17",
+      "work_location": "上海总部",
+      "manager": "吴桂芳",
+      "hr_contact": "李静",
+      "email": "chensiyuan@company.com",
+      "onboarding_stage": "probation",
+      "stage_label": "试用期(30-90天)",
+      "account_status": {
+        "enterprise_email": "已激活",
+        "enterprise_im": "已激活",
+        "oa_system": "已开通"
+      },
+      "device_status": {
+        "laptop": "已领取",
+        "monitor": "已领取",
+        "access_card": "已办理"
+      },
+      "access_status": {
+        "office_door": "已开通",
+        "floor_access": "已开通",
+        "vpn": "已开通"
+      },
+      "completed_tasks": ["T001", "T002", "T003", "T004", "T005", "T006", "T007", "T008", "T009", "T010", "T011", "T012", "T013", "T014", "T015", "T016", "T019", "T026", "T031", "T032", "T034", "T035", "T036", "T018", "T020", "T021", "T022"],
+      "pending_tasks": ["T023", "T024", "T033"]
+    },
+    {
+      "employee_id": "E006",
+      "name": "赵雨桐",
+      "department": "市场部",
+      "position": "品牌营销专员",
+      "hire_date": "2026-07-27",
+      "work_location": "上海总部",
+      "manager": "郑凯",
+      "hr_contact": "李静",
+      "email": "zhaoyutong@company.com",
+      "onboarding_stage": "probation",
+      "stage_label": "试用期(30-90天)",
+      "account_status": {
+        "enterprise_email": "已激活",
+        "enterprise_im": "已激活",
+        "oa_system": "已开通"
+      },
+      "device_status": {
+        "laptop": "已领取",
+        "monitor": "已领取",
+        "access_card": "已办理"
+      },
+      "access_status": {
+        "office_door": "已开通",
+        "floor_access": "已开通",
+        "vpn": "已开通"
+      },
+      "completed_tasks": ["T001", "T002", "T003", "T004", "T005", "T006", "T007", "T008", "T009", "T010", "T011", "T012", "T013", "T014", "T015", "T016", "T019", "T031", "T032", "T034", "T035", "T036", "T017", "T018", "T020", "T021", "T022", "T033"],
+      "pending_tasks": ["T023", "T024"]
+    },
+    {
+      "employee_id": "E007",
+      "name": "刘子墨",
+      "department": "运营部",
+      "position": "用户运营专员",
+      "hire_date": "2026-07-13",
+      "work_location": "上海总部",
+      "manager": "何静怡",
+      "hr_contact": "王雅婷",
+      "email": "liuzimo@company.com",
+      "onboarding_stage": "probation",
+      "stage_label": "试用期(30-90天)",
+      "account_status": {
+        "enterprise_email": "已激活",
+        "enterprise_im": "已激活",
+        "oa_system": "已开通"
+      },
+      "device_status": {
+        "laptop": "已领取",
+        "monitor": "已领取",
+        "access_card": "已办理"
+      },
+      "access_status": {
+        "office_door": "已开通",
+        "floor_access": "已开通",
+        "vpn": "已开通"
+      },
+      "completed_tasks": ["T001", "T002", "T003", "T004", "T005", "T006", "T007", "T008", "T009", "T010", "T011", "T012", "T013", "T014", "T015", "T016", "T019", "T031", "T032", "T034", "T035", "T036", "T017", "T018", "T020", "T021", "T022", "T033"],
+      "pending_tasks": ["T023", "T024"]
+    },
+    {
+      "employee_id": "E008",
+      "name": "黄梓萱",
+      "department": "人事部",
+      "position": "招聘专员",
+      "hire_date": "2026-09-07",
+      "work_location": "上海总部",
+      "manager": "徐蕾",
+      "hr_contact": "李静",
+      "email": "huangzixuan@company.com",
+      "onboarding_stage": "month_1",
+      "stage_label": "入职第1个月",
+      "account_status": {
+        "enterprise_email": "已激活",
+        "enterprise_im": "已激活",
+        "oa_system": "已开通"
+      },
+      "device_status": {
+        "laptop": "已领取",
+        "monitor": "已领取",
+        "access_card": "已办理"
+      },
+      "access_status": {
+        "office_door": "已开通",
+        "floor_access": "已开通",
+        "vpn": "已开通"
+      },
+      "completed_tasks": ["T001", "T002", "T003", "T004", "T005", "T006", "T007", "T008", "T009", "T010", "T011", "T012", "T013", "T014", "T015", "T016", "T019", "T031", "T032", "T034", "T035", "T036"],
+      "pending_tasks": ["T018", "T020", "T021", "T022", "T030", "T033"]
+    },
+    {
+      "employee_id": "E009",
+      "name": "周柏宇",
+      "department": "研发部",
+      "position": "前端开发工程师",
+      "hire_date": "2026-09-14",
+      "work_location": "上海总部",
+      "manager": "刘建军",
+      "hr_contact": "王雅婷",
+      "email": "zhouboyu@company.com",
+      "onboarding_stage": "month_1",
+      "stage_label": "入职第1个月",
+      "account_status": {
+        "enterprise_email": "已激活",
+        "enterprise_im": "已激活",
+        "oa_system": "已开通"
+      },
+      "device_status": {
+        "laptop": "已领取",
+        "monitor": "已领取",
+        "access_card": "已办理"
+      },
+      "access_status": {
+        "office_door": "已开通",
+        "floor_access": "已开通",
+        "vpn": "已开通"
+      },
+      "completed_tasks": ["T001", "T002", "T003", "T004", "T005", "T006", "T007", "T008", "T009", "T010", "T011", "T012", "T013", "T014", "T015", "T016", "T019", "T031", "T032", "T034", "T035", "T036"],
+      "pending_tasks": ["T018", "T020", "T021", "T022", "T029", "T033"]
+    },
+    {
+      "employee_id": "E010",
+      "name": "吴思琪",
+      "department": "产品部",
+      "position": "数据产品经理",
+      "hire_date": "2026-10-11",
+      "work_location": "上海总部",
+      "manager": "陈国峰",
+      "hr_contact": "王雅婷",
+      "email": "wusiqi@company.com",
+      "onboarding_stage": "day_1",
+      "stage_label": "入职第1天",
+      "account_status": {
+        "enterprise_email": "待激活",
+        "enterprise_im": "待激活",
+        "oa_system": "未开通"
+      },
+      "device_status": {
+        "laptop": "待领取",
+        "monitor": "待领取",
+        "access_card": "待办理"
+      },
+      "access_status": {
+        "office_door": "未开通",
+        "floor_access": "未开通",
+        "vpn": "未开通"
+      },
+      "completed_tasks": ["T002"],
+      "pending_tasks": ["T001", "T003", "T004", "T005", "T006", "T007", "T008", "T012", "T013", "T031"]
+    }
+  ]
+}

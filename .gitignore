@@ -1,0 +1,29 @@
+# Credentials stay local; only the blank template is public.
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+credentials*.json
+secrets*.json
+
+# Local execution data and generated files.
+backend/data/execution_logs.json
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+node_modules/
+dist/
+tmp/
+.DS_Store
+Thumbs.db
+*.log
+
+# Personal interview and resume materials are outside this public package.
+*简历*
+*Prompt.md
+项目面试资料.md
